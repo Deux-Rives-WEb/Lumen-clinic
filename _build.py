@@ -37,8 +37,29 @@ NAV = [
 
 def e(s): return html.escape(s, quote=True)
 
-def ph(cls="v1", style="", extra=""):
-    return f'<div class="ph {cls}" style="{style}" role="img" aria-label="Placeholder image"{extra}></div>'
+PHOTOS = {
+    "interior": ("clinic-interior.webp", "Light-filled clinic reception with an oak desk"),
+    "treatment": ("clinic-treatment.webp", "Bright orthodontic treatment suite with a dental chair"),
+    "consultation": ("clinic-consultation.webp", "Illustration of an orthodontic consultation"),
+}
+PHOTO_VARIANTS = {
+    "v1": "interior", "v2": "treatment", "v3": "treatment",
+    "v4": "consultation", "v5": "consultation", "v6": "interior",
+}
+
+def photo(P, key, *, eager=False, decorative=False):
+    file, alt = PHOTOS[key]
+    loading = 'loading="eager" fetchpriority="high"' if eager else 'loading="lazy"'
+    return f'<img src="{P}assets/media/{file}" alt="{e("" if decorative else alt)}" {loading} decoding="async">'
+
+def ph(P, cls="v1", style="", extra=""):
+    key = PHOTO_VARIANTS.get(cls.split()[0])
+    if key is None:
+        return f'<div class="ph {cls}" style="{style}" aria-hidden="true"{extra}></div>'
+    return f'<div class="ph noicon {cls}" style="{style}"{extra}>{photo(P, key)}</div>'
+
+def hero_photo(P, key, cls="", extra="", eager=False):
+    return f'<div class="vid has-photo {cls}" aria-hidden="true"{extra}>{photo(P, key, eager=eager, decorative=True)}</div>'
 
 def btn(label, href="#", side="", light=False, book=False):
     cls = "btn" + (" r" if side == "r" else "") + (" light" if light else "")
@@ -57,10 +78,12 @@ def header(P, current, dark=False):
     items.append(f'<li><a href="#" data-book>{ICON["cal"]}Make an appointment</a></li>')
     side = []
     for label, href, sub in NAV:
-        side.append(f'<a href="{P}{href}">{e(label)}</a>')
+        current_page = ' aria-current="page"' if href == current else ''
+        sublinks = ''
         if sub:
-            side.append('<div class="subl">' + ''.join(f'<a href="{P}{h}">{e(l)}</a>' for l, h in sub) + '</div>')
-    side.append('<a href="#" data-book>Make an appointment</a>')
+            sublinks = '<div class="subl">' + ''.join(f'<a href="{P}{h}">{e(l)}</a>' for l, h in sub) + '</div>'
+        side.append(f'<div class="side-group"><a href="{P}{href}"{current_page}>{e(label)}</a>{sublinks}</div>')
+    side.append('<div class="side-group"><a href="#" data-book>Make an appointment</a></div>')
     return f'''
 <a class="sr-only" href="#main">Skip to content</a>
 <header class="site-header{' dark-text' if dark else ''}">
@@ -76,11 +99,11 @@ def header(P, current, dark=False):
       </div>
       <nav class="nav" aria-label="Main"><ul>{''.join(items)}</ul></nav>
     </div>
-    <button class="menu-toggle" type="button">Menu</button>
+    <button class="menu-toggle" type="button" aria-controls="clinic-menu" aria-expanded="false"><span class="menu-lines" aria-hidden="true"></span>Menu</button>
   </div>
 </header>
-<div class="scrim"></div>
-<aside class="side" aria-label="Menu"><button class="close" type="button" aria-label="Close">×</button>{''.join(side)}</aside>'''
+<div class="scrim" aria-hidden="true"></div>
+<aside class="side" id="clinic-menu" role="dialog" aria-modal="true" aria-label="Navigation menu" aria-hidden="true" inert><button class="close" type="button" aria-label="Close menu">×</button><nav aria-label="Main navigation">{''.join(side)}</nav></aside>'''
 
 def footer(P):
     return f'''
@@ -93,7 +116,7 @@ def footer(P):
     <div class="foot-legal"><h6>Legal information</h6><a href="#">Privacy policy</a><a href="#">Legal notice</a></div>
     <div class="foot-legal"><h6>Client experience</h6><a href="#">Patient space</a><a href="#" data-book>New patient</a></div>
   </div>
-  <div class="foot-bottom"><span>© {BRAND} — demo website, fictional clinic and placeholder content.</span><span>Website by Deux Rives Web</span></div>
+  <div class="foot-bottom"><span>© {BRAND} — demo website, fictional clinic and illustrative imagery.</span><span>Website by Deux Rives Web</span></div>
 </footer>
 <div class="modal" role="dialog" aria-modal="true" aria-label="Book an appointment"><div class="card"><button class="x" type="button" aria-label="Close">×</button>
   <h3>In need of an appointment?</h3><p>Book online in a few clicks, or call the clinic and our team will find a slot with you.</p>
@@ -140,7 +163,7 @@ def home(P):
     variants = ["v1", "v2", "v3", "v4", "v5", "v6"]
     for n, (title, href, items, flip, media_cls) in enumerate(treat):
         links = ''.join(f'<a href="{P}{href}">{e(i)}</a>' for i in items)
-        imgs = ''.join(ph(variants[(n + k) % 6] + (" on" if k == len(items) else "")) for k in range(len(items) + 1))
+        imgs = ''.join(ph(P, variants[(n + k) % 6] + (" on" if k == len(items) else "")) for k in range(len(items) + 1))
         blocks.append(f'''<section class="treat{' flip' if flip else ''}" data-anim="fade-in-from-left" data-delay="300">
   <div class="txt"><a href="{P}{href}"><h2 class="t-xl">{e(title).replace(' ', '<br>', 1)}</h2></a><div class="list">{links}</div></div>
   <div class="media{media_cls}">{imgs}</div>
@@ -149,7 +172,7 @@ def home(P):
             blocks.append('<div class="rule"></div>')
     return f'''
 <section class="hero">
-  <div class="vid"></div>
+  {hero_photo(P, "interior", eager=True)}
   <div class="content hero-split" data-scrollmove="0.1" data-fromtop><h1 class="t-hero">A confident<br>smile</h1><h1 class="t-hero">for every<br>stage of life</h1></div>
   <div class="hero-actions">{btn("Appointment", "#", light=True, book=True)}{btn("About us", P+"the-clinic/", "r", light=True)}</div>
 </section>
@@ -164,14 +187,14 @@ def home(P):
 </section>
 
 <section class="clinic-split">
-  <div class="simple-slider" aria-label="Clinic photos — drag to browse"><div class="ss-track">{''.join('<div class="ss-cell">'+ph(v)+'</div>' for v in ("v6","v3","v1"))}</div></div>
+  <div class="simple-slider" aria-label="Clinic photos — drag to browse"><div class="ss-track">{''.join('<div class="ss-cell">'+ph(P, v)+'</div>' for v in ("v6","v3","v5"))}</div></div>
   <div class="txt"><h2 class="t-xl">The clinic</h2><h4 data-split>A calm, light-filled practice in the heart of the city, easy to reach by public transport and designed so every visit feels unhurried.</h4>{btn("Visit us", P+"the-clinic/#visit")}</div>
 </section>
 
 {''.join(blocks)}
 
 <section class="quote-sec">
-  <div class="zoom-wrap" data-anim="fade-in">{ph("v5")}</div>
+  <div class="zoom-wrap" data-anim="fade-in">{ph(P, "v5")}</div>
   <div data-anim="fade-in">
     <blockquote>“Our team brings together specialists who share one conviction: an accurate diagnosis comes first. Every plan we propose draws on current research and modern equipment, so each patient receives care that is both healthy and beautiful.”</blockquote>
     <div class="who"><span class="t-sm">Dr Claire Martin</span><span class="t-xs">Head of clinic</span></div>
@@ -180,7 +203,7 @@ def home(P):
   </div>
 </section>
 
-<section class="band-video clip-reveal"><div class="vid warm shade"></div>{btn("Come visit us", P+"the-clinic/#visit", "r", light=True)}</section>
+<section class="band-video clip-reveal">{hero_photo(P, "interior", "warm shade")}{btn("Come visit us", P+"the-clinic/#visit", "r", light=True)}</section>
 
 <section class="cta-row">
   <p data-split>Ready to change your smile? We look at every smile as a balance between aesthetics, oral health and function. Book your first appointment and we will guide you towards a harmonious result, built to last and adapted to your daily life.</p>
@@ -191,11 +214,11 @@ def home(P):
 def clinic(P):
     rooms = [("chair", "4 modern treatment rooms"), ("scan", "Integrated imaging area"), ("lab", "On-site laboratory"), ("steam", "Sterilisation area"), ("drop", "Dedicated hygiene room")]
     descs = ["Calm, bright rooms designed for comfort.", "For instant diagnosis and maximum precision.", "Custom appliances made on site.", "Strict protocols for complete safety.", "A room reserved for professional cleaning."]
-    cards = ''.join(f'<div class="room" data-anim="fade-in-from-bottom" data-delay="{k*100}">{ph(v + " noicon")}<span class="lbl">{ICON[i]}<span class="t-sm" style="display:block">{e(t)}</span><span class="desc">{e(d)}</span></span></div>' for k, ((i, t), v, d) in enumerate(zip(rooms, ["v2", "v4", "v5", "v2", "v1"], descs)))
+    cards = ''.join(f'<div class="room" data-anim="fade-in-from-bottom" data-delay="{k*100}">{ph(P, v)}<span class="lbl">{ICON[i]}<span class="t-sm" style="display:block">{e(t)}</span><span class="desc">{e(d)}</span></span></div>' for k, ((i, t), v, d) in enumerate(zip(rooms, ["v2", "v4", "v5", "v2", "v1"], descs)))
     people = [("Dr Claire Martin", "Head of clinic"), ("Sophie", "Coordinator"), ("Inès", "Dental assistant"), ("Laura", "Dental assistant")]
-    team = ''.join(f'<div data-anim="fade-in-from-right" data-delay="{k*100}">{ph("person")}<h4>{e(n)}</h4><div class="role">{e(r)}</div></div>' for k, (n, r) in enumerate(people))
+    team = ''.join(f'<div data-anim="fade-in-from-right" data-delay="{k*100}">{ph(P, "person")}<h4>{e(n)}</h4><div class="role">{e(r)}</div></div>' for k, (n, r) in enumerate(people))
     return f'''
-<section class="hero hero-center"><div class="vid dark"></div>
+<section class="hero hero-center">{hero_photo(P, "treatment", "dark", eager=True)}
   <div class="content"><h1 class="t-hero no-split" style="font-size:48px" data-anim="fade-in-from-bottom">The clinic</h1><p data-anim="fade-in-from-bottom" data-delay="100">Innovation, precision and care: the three pillars of our practice.</p></div>
 </section>
 
@@ -209,11 +232,11 @@ def clinic(P):
     <p>Every detail matters. Our equipment and surroundings are chosen to make each treatment calm and precise, so every smile finds its balance.</p>
     <p><b>3D intraoral scanner:</b> accurate, comfortable impressions without paste.</p>
     <p><b>In-house 3D printing:</b> custom appliances made quickly and precisely.</p></div>
-  <div data-anim="fade-in-from-right" data-delay="300">{ph("v2", "height:334px")}</div>
+  <div data-anim="fade-in-from-right" data-delay="300">{ph(P, "v2", "height:334px")}</div>
 </section>
 
 <section class="story">
-  <div data-anim="fade-in-from-left" data-delay="300" style="align-self:stretch">{ph("v6", "height:100%")}</div>
+  <div data-anim="fade-in-from-left" data-delay="300" style="align-self:stretch">{ph(P, "v6", "height:100%")}</div>
   <div class="txt" data-anim="fade-in-from-left" style="padding:60px 0"><h2 class="t-lg">Our story</h2>
     <p>Founded more than ten years ago, the clinic has become a reference for discreet adult orthodontics. Guided by a clear vision, our founder introduced techniques that combine discretion and efficiency so that every smile fits the face naturally.</p>
     <p>Today we offer complete, personalised care for adults and children, using the most advanced techniques recognised internationally. We keep a careful balance between aesthetics, function and oral health for natural, lasting results.</p>
@@ -241,7 +264,7 @@ def clinic(P):
 # ---------------------------------------------------------------- CONCEPT
 def concept(P):
     return f'''
-<section class="hero hero-center" style="min-height:632px"><div class="vid sky"></div><div class="content"><h1 class="t-lg">Our concept</h1></div></section>
+<section class="hero hero-center" style="min-height:632px">{hero_photo(P, "consultation", "sky", eager=True)}<div class="content"><h1 class="t-lg">Our concept</h1></div></section>
 
 <section class="sec bg-blush">
   <div class="narrow"><h2 class="t-md" style="margin-bottom:24px">Our values</h2>
@@ -253,7 +276,13 @@ def concept(P):
 <section class="sec bg-white diag">
   <div class="text"><h2 class="t-md" style="margin-bottom:24px">Smile and facial<br>structural diagnosis</h2>
     <p class="t-lead">Your smile deserves a global vision: attention to every line and every detail of your face. Our structural diagnosis is the moment where we read the geometry of your smile. Using modern imaging, we study how the smile and the face interact to plan a harmonious result.</p></div>
-  <div class="video-box" aria-label="Video (autoplay, muted, loop)"><div class="vid lab"></div></div>
+  <figure class="clinic-preview">
+    <video controls playsinline preload="none" poster="{P}assets/media/clinic-consultation.webp" aria-label="Illustrative Lumen Clinic preview">
+      <source src="{P}assets/media/clinic-preview.mp4" type="video/mp4">
+      <a href="{P}assets/media/clinic-preview.mp4">Watch the clinic preview</a>
+    </video>
+    <figcaption>Illustrative preview of a fictional clinic. The video has no audio.</figcaption>
+  </figure>
 </section>
 
 <section class="sec bg-blush" data-steps>
@@ -265,7 +294,7 @@ def concept(P):
       <div class="step-body"><p>Would you like a face-to-face consultation with a specialist? Visit the clinic for a friendly first meeting with our team and our technology.</p><p>Once your patient file is created, we welcome you for an individual appointment with a full diagnosis and a follow-up plan built around your expectations.</p>{btn("Make an appointment", "#", book=True)}</div>
       <div class="step-body"><p>To make things easier, we also offer remote consultations. If you would like an appointment quickly, a first short visit can be used to prepare the administrative documents and create your patient file.</p><p>After that, most of the diagnosis and follow-up can take place remotely, from home. Secure, personalised tools keep the quality of care identical to an in-clinic visit.</p>{btn("Make an appointment", "#", book=True)}</div>
     </div>
-    <div class="step-media">{ph("v3")}{ph("v5")}</div>
+    <div class="step-media">{ph(P, "v3")}{ph(P, "v5")}</div>
   </div>
 </section>
 
@@ -287,7 +316,7 @@ def treatments(P):
     for i, (title, href, lead, subs) in enumerate(blocks):
         s = ''.join(f'<h6 class="t-sm">{e(h)}</h6><p>{e(t)}</p>' for h, t in subs)
         body += f'<div class="tblock" id="t{i}"><h3 class="t-lg">{e(title)}</h3><p>{e(lead)}</p>{s}{btn("Discover more", P+href)}</div>'
-    imgs = ''.join(ph(v) for v in ["v2", "v6", "v4"])
+    imgs = ''.join(ph(P, v) for v in ["v2", "v6", "v4"])
     reviews = [
         ("Very attentive with my son: everything was explained clearly to both of us and he was always at ease. I recommend the clinic.", "Patient A."),
         ("An elegant, calm practice. The team is warm and the doctor takes time to explain each step. Thank you for my new smile!", "Patient B."),
@@ -296,7 +325,7 @@ def treatments(P):
     ]
     revs = ''.join(f'<div class="review"><div class="bubble"><span class="q">“</span><span>{e(t)}</span></div><span class="name">{e(n)}</span><span class="note">Sample testimonial</span></div>' for t, n in reviews)
     return f'''
-<section class="hero hero-center" style="min-height:632px"><div class="vid warm"></div><div class="content"><h1 class="t-xl">Lumen expertise</h1></div></section>
+<section class="hero hero-center" style="min-height:632px">{hero_photo(P, "consultation", "warm", eager=True)}<div class="content"><h1 class="t-xl">Lumen expertise</h1></div></section>
 
 <section class="sec bg-blush"><div class="narrow"><h2 class="t-lg" style="margin-bottom:24px">Our expertise</h2>
   <p class="t-lead">Every smile is unique, and so is every treatment plan. We combine orthodontics, aesthetic care and prevention so that the result looks natural, works well and lasts. Each plan starts with a careful diagnosis and is adjusted at every visit.</p></div></section>
@@ -323,7 +352,7 @@ def treatments(P):
 def detail(title_lines, words, intro, explore, items):
     def body(P):
         cls = "c4" if len(items) == 4 else "c3"
-        cards = ''.join(f'<a class="card" href="#d{i}" data-anim="fade-in-from-right" data-delay="{i*100}"><div class="imgw">{ph(v)}</div><h5 class="t-sm"><span>{e(it["name"])}</span></h5><p>{e(it["short"])}</p></a>' for i, (it, v) in enumerate(zip(items, ["v1", "v3", "v5", "v6"])))
+        cards = ''.join(f'<a class="card" href="#d{i}" data-anim="fade-in-from-right" data-delay="{i*100}"><div class="imgw">{ph(P, v)}</div><h5 class="t-sm"><span>{e(it["name"])}</span></h5><p>{e(it["short"])}</p></a>' for i, (it, v) in enumerate(zip(items, ["v1", "v3", "v5", "v6"])))
         dc = ''
         for i, it in enumerate(items):
             lis = ''.join(f'<li><b>{e(a)}:</b> {e(b)}</li>' for a, b in it["points"])
@@ -335,7 +364,7 @@ def detail(title_lines, words, intro, explore, items):
         return f'''
 <section class="d-hero">
   <div><h1 class="t-hero d-title">{title_lines}</h1><h5 class="t-md rw-title">For a <span class="rw" data-rotation="2500" data-delay="300">{''.join(f'<span class="rw-w">{e(w)}</span>' for w in words)}</span> smile</h5><h4 data-split>{e(intro)}</h4></div>
-  {ph("v6 arch")}
+  {ph(P, "v6 arch")}
 </section>
 <section class="explore bg-sand"><span class="ghost" aria-hidden="true" data-anim="fade-in-from-bottom" data-delay="600">L</span>
   <h2 class="t-lg center" data-anim="fade-in-from-bottom" data-delay="600">{e(explore)}</h2><div class="cards {cls}">{cards}</div>
@@ -398,7 +427,7 @@ def academy(P):
     ]
     acc = ''.join(f'<details><summary>{e(q)}<i></i></summary><div class="ans"><p>{e(a)}</p></div></details>' for q, a in faq)
     return f'''
-<section class="hero hero-center" style="min-height:632px"><div class="vid lab shade" data-parallax="0.4"></div>
+<section class="hero hero-center" style="min-height:632px">{hero_photo(P, "treatment", "lab shade", extra=' data-parallax="0.4"', eager=True)}
   <div class="content"><h1 class="t-lg">Lumen Academy</h1><p data-split>As dental technology evolves, the clinic is committed to research so our patients benefit from the latest advances.</p></div>
 </section>
 
@@ -412,11 +441,11 @@ def academy(P):
   <div class="txt" data-anim="fade-in-from-bottom"><h2 class="t-md no-split">Conference attendance</h2>
     <p class="lead">Dr Martin regularly takes part in professional conferences, sharing her expertise and contributing to the progress of orthodontics. As a member of a national orthodontic society, she helps organise several annual meetings.</p>
     <div class="meta"><div><b>“Sharing knowledge is at the heart of our profession.”</b><span class="t-sm">Dr Martin</span><br><span class="t-xs muted">Head of clinic</span></div><div>Examples of conferences:<ul><li>Conference name</li><li>Conference name</li><li>Conference name</li></ul></div></div></div>
-  <div class="pwrap" data-anim="fade-in">{ph("v4", extra=' data-parallax="0.08"')}</div>
+  <div class="pwrap" data-anim="fade-in">{ph(P, "v4", extra=' data-parallax="0.08"')}</div>
 </section>
 
 <section class="split-img alt" id="speaker">
-  <div class="pwrap" data-anim="fade-in">{ph("v1", extra=' data-parallax="0.08"')}</div>
+  <div class="pwrap" data-anim="fade-in">{ph(P, "v1", extra=' data-parallax="0.08"')}</div>
   <div class="txt" data-anim="fade-in-from-bottom"><h2 class="t-md no-split">Speaker and trainer</h2>
     <p class="lead">Dr Martin also teaches courses for orthodontists who want to learn advanced techniques. These courses are recognised for their practical, hands-on approach.</p>
     <span class="logo-box">Partner logo</span>
@@ -427,7 +456,7 @@ def academy(P):
   <div class="txt" data-anim="fade-in-from-bottom"><h2 class="t-md no-split">Scientific articles</h2>
     <p class="lead">Alongside conferences, the team publishes articles in professional journals on orthodontic techniques and the link between aesthetics and function.</p>
     <div class="meta"><div><b>“Spreading knowledge helps every patient.”</b><span class="t-sm">Dr Martin</span><br><span class="t-xs muted">Head of clinic</span></div><div>Sample of articles:<ul><li>Article title</li><li>Article title</li><li>Article title</li></ul></div></div></div>
-  <div class="pwrap" data-anim="fade-in">{ph("v3", extra=' data-parallax="0.08"')}</div>
+  <div class="pwrap" data-anim="fade-in">{ph(P, "v3", extra=' data-parallax="0.08"')}</div>
 </section>
 
 <section class="faq bg-white" id="faq">
@@ -441,7 +470,8 @@ def build():
         shutil.rmtree(OUT)
     os.makedirs(os.path.join(OUT, "assets"))
     for f in ("style.css", "main.js"):
-        shutil.copy(os.path.join(ROOT, "src", f), os.path.join(OUT, "assets", f))
+        shutil.copy(os.path.join(ROOT, "_src", f), os.path.join(OUT, "assets", f))
+    shutil.copytree(os.path.join(ROOT, "assets", "media"), os.path.join(OUT, "assets", "media"))
     page("", "Home", "Orthodontics, aesthetic and regenerating care in a calm, modern clinic.", home, "")
     page("the-clinic", "The Clinic", "Discover the practice, the technology and the team.", clinic, "the-clinic/")
     page("our-concept", "Our Concept", "Our values, structural diagnosis and treatment planning.", concept, "our-concept/")

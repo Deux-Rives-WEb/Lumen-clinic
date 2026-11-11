@@ -1,6 +1,6 @@
 # Lumen Clinic — demo website
 
-Static, 8-page clinic website template (fictional brand, placeholder text and images).
+Static, 8-page clinic website template (fictional brand, sample text and original illustrative imagery).
 Pages: Home, The Clinic, Our Concept, Our Treatments, Orthodontics, Aesthetics, Regenerating, Academy.
 
 ## Hosting
@@ -20,7 +20,5 @@ That makes <body> a scroll container that swallows mouse-wheel/trackpad scrollin
 `overflow-x: clip` instead and never sets `overscroll-behavior: none` on html/body. Don't reintroduce that pair.
 
 ## Editing
-- Shared design: `assets/style.css` and `assets/main.js`.
-- Images are CSS placeholders (`.ph` blocks): put an `<img>` inside each block.
-- Hero "videos" are animated placeholders (`.vid`): add `<video autoplay muted loop playsinline>` inside.
-- To change the brand, address or copy everywhere at once: edit `_build.py` and `_src/`, then run `python3 _build.py`.
+- Edit `_build.py` and `_src/`, then run `python3 _build.py` to generate the eight pages and shared assets in `dist/`. GitHub Pages serves the generated HTML and shared assets checked into the repository root.
+- `assets/media/` contains generated clinic photography and a silent motion preview assembled from that imagery. The video plays on demand on the Our Concept page. The imagery depicts a fictional clinic.

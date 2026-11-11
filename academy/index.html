@@ -27,14 +27,14 @@
       </div>
       <nav class="nav" aria-label="Main"><ul><li><a href="../">Home</a></li><li><a href="../the-clinic/">The Clinic</a></li><li><a href="../our-concept/">Our Concept</a></li><li><a href="../our-treatments/">Our Treatments<svg class="chev" viewBox="0 0 24 24"><path d="M5 9l7 7 7-7"/></svg></a><ul class="sub"><li><a href="../orthodontics/">Orthodontics</a></li><li><a href="../aesthetics/">Aesthetics</a></li><li><a href="../regenerating/">Regenerating</a></li></ul></li><li class="current"><a href="../academy/">Academy<svg class="chev" viewBox="0 0 24 24"><path d="M5 9l7 7 7-7"/></svg></a><ul class="sub"><li><a href="../academy/#research">Research</a></li><li><a href="../academy/#publications">Publications</a></li><li><a href="../academy/#journal">Journal</a></li><li><a href="../academy/#faq">FAQ</a></li></ul></li><li><a href="#" data-book><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4M7 14h2M11 14h2M15 14h2M7 17h2M11 17h2"/></svg>Make an appointment</a></li></ul></nav>
     </div>
-    <button class="menu-toggle" type="button">Menu</button>
+    <button class="menu-toggle" type="button" aria-controls="clinic-menu" aria-expanded="false"><span class="menu-lines" aria-hidden="true"></span>Menu</button>
   </div>
 </header>
-<div class="scrim"></div>
-<aside class="side" aria-label="Menu"><button class="close" type="button" aria-label="Close">×</button><a href="../">Home</a><a href="../the-clinic/">The Clinic</a><a href="../our-concept/">Our Concept</a><a href="../our-treatments/">Our Treatments</a><div class="subl"><a href="../orthodontics/">Orthodontics</a><a href="../aesthetics/">Aesthetics</a><a href="../regenerating/">Regenerating</a></div><a href="../academy/">Academy</a><div class="subl"><a href="../academy/#research">Research</a><a href="../academy/#publications">Publications</a><a href="../academy/#journal">Journal</a><a href="../academy/#faq">FAQ</a></div><a href="#" data-book>Make an appointment</a></aside>
+<div class="scrim" aria-hidden="true"></div>
+<aside class="side" id="clinic-menu" role="dialog" aria-modal="true" aria-label="Navigation menu" aria-hidden="true" inert><button class="close" type="button" aria-label="Close menu">×</button><nav aria-label="Main navigation"><div class="side-group"><a href="../">Home</a></div><div class="side-group"><a href="../the-clinic/">The Clinic</a></div><div class="side-group"><a href="../our-concept/">Our Concept</a></div><div class="side-group"><a href="../our-treatments/">Our Treatments</a><div class="subl"><a href="../orthodontics/">Orthodontics</a><a href="../aesthetics/">Aesthetics</a><a href="../regenerating/">Regenerating</a></div></div><div class="side-group"><a href="../academy/" aria-current="page">Academy</a><div class="subl"><a href="../academy/#research">Research</a><a href="../academy/#publications">Publications</a><a href="../academy/#journal">Journal</a><a href="../academy/#faq">FAQ</a></div></div><div class="side-group"><a href="#" data-book>Make an appointment</a></div></nav></aside>
 <main id="main">
 
-<section class="hero hero-center" style="min-height:632px"><div class="vid lab shade" data-parallax="0.4"></div>
+<section class="hero hero-center" style="min-height:632px"><div class="vid has-photo lab shade" aria-hidden="true" data-parallax="0.4"><img src="../assets/media/clinic-treatment.webp" alt="" loading="eager" fetchpriority="high" decoding="async"></div>
   <div class="content"><h1 class="t-lg">Lumen Academy</h1><p data-split>As dental technology evolves, the clinic is committed to research so our patients benefit from the latest advances.</p></div>
 </section>
 
@@ -48,11 +48,11 @@
   <div class="txt" data-anim="fade-in-from-bottom"><h2 class="t-md no-split">Conference attendance</h2>
     <p class="lead">Dr Martin regularly takes part in professional conferences, sharing her expertise and contributing to the progress of orthodontics. As a member of a national orthodontic society, she helps organise several annual meetings.</p>
     <div class="meta"><div><b>“Sharing knowledge is at the heart of our profession.”</b><span class="t-sm">Dr Martin</span><br><span class="t-xs muted">Head of clinic</span></div><div>Examples of conferences:<ul><li>Conference name</li><li>Conference name</li><li>Conference name</li></ul></div></div></div>
-  <div class="pwrap" data-anim="fade-in"><div class="ph v4" style="" role="img" aria-label="Placeholder image" data-parallax="0.08"></div></div>
+  <div class="pwrap" data-anim="fade-in"><div class="ph noicon v4" style="" data-parallax="0.08"><img src="../assets/media/clinic-consultation.webp" alt="Illustration of an orthodontic consultation" loading="lazy" decoding="async"></div></div>
 </section>
 
 <section class="split-img alt" id="speaker">
-  <div class="pwrap" data-anim="fade-in"><div class="ph v1" style="" role="img" aria-label="Placeholder image" data-parallax="0.08"></div></div>
+  <div class="pwrap" data-anim="fade-in"><div class="ph noicon v1" style="" data-parallax="0.08"><img src="../assets/media/clinic-interior.webp" alt="Light-filled clinic reception with an oak desk" loading="lazy" decoding="async"></div></div>
   <div class="txt" data-anim="fade-in-from-bottom"><h2 class="t-md no-split">Speaker and trainer</h2>
     <p class="lead">Dr Martin also teaches courses for orthodontists who want to learn advanced techniques. These courses are recognised for their practical, hands-on approach.</p>
     <span class="logo-box">Partner logo</span>
@@ -63,7 +63,7 @@
   <div class="txt" data-anim="fade-in-from-bottom"><h2 class="t-md no-split">Scientific articles</h2>
     <p class="lead">Alongside conferences, the team publishes articles in professional journals on orthodontic techniques and the link between aesthetics and function.</p>
     <div class="meta"><div><b>“Spreading knowledge helps every patient.”</b><span class="t-sm">Dr Martin</span><br><span class="t-xs muted">Head of clinic</span></div><div>Sample of articles:<ul><li>Article title</li><li>Article title</li><li>Article title</li></ul></div></div></div>
-  <div class="pwrap" data-anim="fade-in"><div class="ph v3" style="" role="img" aria-label="Placeholder image" data-parallax="0.08"></div></div>
+  <div class="pwrap" data-anim="fade-in"><div class="ph noicon v3" style="" data-parallax="0.08"><img src="../assets/media/clinic-treatment.webp" alt="Bright orthodontic treatment suite with a dental chair" loading="lazy" decoding="async"></div></div>
 </section>
 
 <section class="faq bg-white" id="faq">
@@ -81,7 +81,7 @@
     <div class="foot-legal"><h6>Legal information</h6><a href="#">Privacy policy</a><a href="#">Legal notice</a></div>
     <div class="foot-legal"><h6>Client experience</h6><a href="#">Patient space</a><a href="#" data-book>New patient</a></div>
   </div>
-  <div class="foot-bottom"><span>© Lumen Clinic — demo website, fictional clinic and placeholder content.</span><span>Website by Deux Rives Web</span></div>
+  <div class="foot-bottom"><span>© Lumen Clinic — demo website, fictional clinic and illustrative imagery.</span><span>Website by Deux Rives Web</span></div>
 </footer>
 <div class="modal" role="dialog" aria-modal="true" aria-label="Book an appointment"><div class="card"><button class="x" type="button" aria-label="Close">×</button>
   <h3>In need of an appointment?</h3><p>Book online in a few clicks, or call the clinic and our team will find a slot with you.</p>

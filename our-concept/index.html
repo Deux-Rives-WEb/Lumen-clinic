@@ -27,14 +27,14 @@
       </div>
       <nav class="nav" aria-label="Main"><ul><li><a href="../">Home</a></li><li><a href="../the-clinic/">The Clinic</a></li><li class="current"><a href="../our-concept/">Our Concept</a></li><li><a href="../our-treatments/">Our Treatments<svg class="chev" viewBox="0 0 24 24"><path d="M5 9l7 7 7-7"/></svg></a><ul class="sub"><li><a href="../orthodontics/">Orthodontics</a></li><li><a href="../aesthetics/">Aesthetics</a></li><li><a href="../regenerating/">Regenerating</a></li></ul></li><li><a href="../academy/">Academy<svg class="chev" viewBox="0 0 24 24"><path d="M5 9l7 7 7-7"/></svg></a><ul class="sub"><li><a href="../academy/#research">Research</a></li><li><a href="../academy/#publications">Publications</a></li><li><a href="../academy/#journal">Journal</a></li><li><a href="../academy/#faq">FAQ</a></li></ul></li><li><a href="#" data-book><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4M7 14h2M11 14h2M15 14h2M7 17h2M11 17h2"/></svg>Make an appointment</a></li></ul></nav>
     </div>
-    <button class="menu-toggle" type="button">Menu</button>
+    <button class="menu-toggle" type="button" aria-controls="clinic-menu" aria-expanded="false"><span class="menu-lines" aria-hidden="true"></span>Menu</button>
   </div>
 </header>
-<div class="scrim"></div>
-<aside class="side" aria-label="Menu"><button class="close" type="button" aria-label="Close">×</button><a href="../">Home</a><a href="../the-clinic/">The Clinic</a><a href="../our-concept/">Our Concept</a><a href="../our-treatments/">Our Treatments</a><div class="subl"><a href="../orthodontics/">Orthodontics</a><a href="../aesthetics/">Aesthetics</a><a href="../regenerating/">Regenerating</a></div><a href="../academy/">Academy</a><div class="subl"><a href="../academy/#research">Research</a><a href="../academy/#publications">Publications</a><a href="../academy/#journal">Journal</a><a href="../academy/#faq">FAQ</a></div><a href="#" data-book>Make an appointment</a></aside>
+<div class="scrim" aria-hidden="true"></div>
+<aside class="side" id="clinic-menu" role="dialog" aria-modal="true" aria-label="Navigation menu" aria-hidden="true" inert><button class="close" type="button" aria-label="Close menu">×</button><nav aria-label="Main navigation"><div class="side-group"><a href="../">Home</a></div><div class="side-group"><a href="../the-clinic/">The Clinic</a></div><div class="side-group"><a href="../our-concept/" aria-current="page">Our Concept</a></div><div class="side-group"><a href="../our-treatments/">Our Treatments</a><div class="subl"><a href="../orthodontics/">Orthodontics</a><a href="../aesthetics/">Aesthetics</a><a href="../regenerating/">Regenerating</a></div></div><div class="side-group"><a href="../academy/">Academy</a><div class="subl"><a href="../academy/#research">Research</a><a href="../academy/#publications">Publications</a><a href="../academy/#journal">Journal</a><a href="../academy/#faq">FAQ</a></div></div><div class="side-group"><a href="#" data-book>Make an appointment</a></div></nav></aside>
 <main id="main">
 
-<section class="hero hero-center" style="min-height:632px"><div class="vid sky"></div><div class="content"><h1 class="t-lg">Our concept</h1></div></section>
+<section class="hero hero-center" style="min-height:632px"><div class="vid has-photo sky" aria-hidden="true"><img src="../assets/media/clinic-consultation.webp" alt="" loading="eager" fetchpriority="high" decoding="async"></div><div class="content"><h1 class="t-lg">Our concept</h1></div></section>
 
 <section class="sec bg-blush">
   <div class="narrow"><h2 class="t-md" style="margin-bottom:24px">Our values</h2>
@@ -46,7 +46,13 @@
 <section class="sec bg-white diag">
   <div class="text"><h2 class="t-md" style="margin-bottom:24px">Smile and facial<br>structural diagnosis</h2>
     <p class="t-lead">Your smile deserves a global vision: attention to every line and every detail of your face. Our structural diagnosis is the moment where we read the geometry of your smile. Using modern imaging, we study how the smile and the face interact to plan a harmonious result.</p></div>
-  <div class="video-box" aria-label="Video (autoplay, muted, loop)"><div class="vid lab"></div></div>
+  <figure class="clinic-preview">
+    <video controls playsinline preload="none" poster="../assets/media/clinic-consultation.webp" aria-label="Illustrative Lumen Clinic preview">
+      <source src="../assets/media/clinic-preview.mp4" type="video/mp4">
+      <a href="../assets/media/clinic-preview.mp4">Watch the clinic preview</a>
+    </video>
+    <figcaption>Illustrative preview of a fictional clinic. The video has no audio.</figcaption>
+  </figure>
 </section>
 
 <section class="sec bg-blush" data-steps>
@@ -58,7 +64,7 @@
       <div class="step-body"><p>Would you like a face-to-face consultation with a specialist? Visit the clinic for a friendly first meeting with our team and our technology.</p><p>Once your patient file is created, we welcome you for an individual appointment with a full diagnosis and a follow-up plan built around your expectations.</p><a class="btn" href="#" data-book>Make an appointment</a></div>
       <div class="step-body"><p>To make things easier, we also offer remote consultations. If you would like an appointment quickly, a first short visit can be used to prepare the administrative documents and create your patient file.</p><p>After that, most of the diagnosis and follow-up can take place remotely, from home. Secure, personalised tools keep the quality of care identical to an in-clinic visit.</p><a class="btn" href="#" data-book>Make an appointment</a></div>
     </div>
-    <div class="step-media"><div class="ph v3" style="" role="img" aria-label="Placeholder image"></div><div class="ph v5" style="" role="img" aria-label="Placeholder image"></div></div>
+    <div class="step-media"><div class="ph noicon v3" style=""><img src="../assets/media/clinic-treatment.webp" alt="Bright orthodontic treatment suite with a dental chair" loading="lazy" decoding="async"></div><div class="ph noicon v5" style=""><img src="../assets/media/clinic-consultation.webp" alt="Illustration of an orthodontic consultation" loading="lazy" decoding="async"></div></div>
   </div>
 </section>
 
@@ -74,7 +80,7 @@
     <div class="foot-legal"><h6>Legal information</h6><a href="#">Privacy policy</a><a href="#">Legal notice</a></div>
     <div class="foot-legal"><h6>Client experience</h6><a href="#">Patient space</a><a href="#" data-book>New patient</a></div>
   </div>
-  <div class="foot-bottom"><span>© Lumen Clinic — demo website, fictional clinic and placeholder content.</span><span>Website by Deux Rives Web</span></div>
+  <div class="foot-bottom"><span>© Lumen Clinic — demo website, fictional clinic and illustrative imagery.</span><span>Website by Deux Rives Web</span></div>
 </footer>
 <div class="modal" role="dialog" aria-modal="true" aria-label="Book an appointment"><div class="card"><button class="x" type="button" aria-label="Close">×</button>
   <h3>In need of an appointment?</h3><p>Book online in a few clicks, or call the clinic and our team will find a slot with you.</p>
